@@ -1,0 +1,4 @@
+// General
+
+export const SET_WINDOW_WIDTH = 'SET_WINDOW_WIDTH'
+export const SET_TOUCH_DEVICE_MARKER = 'SET_TOUCH_DEVICE_MARKER'
