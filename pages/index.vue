@@ -242,7 +242,7 @@ export default {
       this.memberDialog = !this.memberDialog;
     },
     addMember(member) {
-      const newMemberId = ((this.members[this.members.length - 1] || {}).id || -1) + 1;
+      const newMemberId = (this.members[this.members.length - 1] || {}).id +1 || 0;
       const newMember = {...member, id: newMemberId};
       this.members.push(newMember);
 
