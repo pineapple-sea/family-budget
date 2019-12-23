@@ -1,13 +1,13 @@
 <template>
   <div class="main">
     <h1 class="main-title">FAMILY BUDGET CONTROLLER</h1>
-    <v-stepper v-model="e1">
+    <v-stepper v-model="stepperNum">
       <v-stepper-header>
-        <v-stepper-step editable :complete="e1 > 1" step="1" color="orange">Members</v-stepper-step>
+        <v-stepper-step editable step="1" color="orange">Members</v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step editable :complete="e1 > 2" step="2" color="orange">Outlays</v-stepper-step>
+        <v-stepper-step editable step="2" color="orange">Outlays</v-stepper-step>
 
         <v-divider></v-divider>
 
@@ -60,12 +60,10 @@
 
           <v-btn
             color="orange"
-            @click="e1 = 2"
+            @click="stepperNum = 2"
           >
             Continue
           </v-btn>
-
-          <v-btn text>Cancel</v-btn>
         </v-stepper-content>
 
         <v-stepper-content step="2">
@@ -114,12 +112,17 @@
 
           <v-btn
             color="orange"
-            @click="e1 = 3"
+            @click="stepperNum = 3"
           >
             Continue
           </v-btn>
 
-          <v-btn text>Cancel</v-btn>
+          <v-btn
+            color="orange"
+            @click="stepperNum = 1"
+          >
+            Back
+          </v-btn>
         </v-stepper-content>
 
         <v-stepper-content step="3">
@@ -141,12 +144,10 @@
 
           <v-btn
             color="orange"
-            @click="e1 = 1"
+            @click="stepperNum = 2"
           >
-            Continue
+            Back
           </v-btn>
-
-          <v-btn text>Cancel</v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -181,7 +182,7 @@ export default {
   },
   data() {
     return {
-      e1: 0,
+      stepperNum: 1,
       years: 1,
       db: null,
 
@@ -196,6 +197,9 @@ export default {
       editingOutlay: {}
     }
   },
+  created() {
+    this.stepperNum = localStorage.getItem('stepperNum') || 1;
+  },
   mounted() {
     let openRequest = indexedDB.open("store", 1);
 
@@ -203,10 +207,10 @@ export default {
       let db = openRequest.result;
 
       if (!db.objectStoreNames.contains('members')) {
-        db.createObjectStore('members', {keyPath: 'id'});
+        db.createObjectStore('members', {keyPath: 'id', autoIncrement: true});
       };
       if (!db.objectStoreNames.contains('outlays')) {
-        db.createObjectStore('outlays', {keyPath: 'id'});
+        db.createObjectStore('outlays', {keyPath: 'id', autoIncrement: true});
       };
     };
 
@@ -246,19 +250,62 @@ export default {
       let members = transaction.objectStore("members");
       let request = members.add(newMember);
     },
-    editMember(member) {
-      this.members.splice(member.id, 1, member)
+    editMember(editedMember) {
+      this.members.forEach((member, i) => {
+        if (editedMember.id === member.id) {
+          this.members.splice(i, 1, editedMember)
+        }
+      });
 
       let transaction = this.db.transaction("members", "readwrite");
       let members = transaction.objectStore("members");
-      let request = members.put(member);
+      let request = members.put(editedMember);
     },
     deleteMember(memberId) {
-      this.members.splice(memberId, 1)
+      this.members.forEach((member, i) => {
+        if (memberId === member.id) {
+          this.members.splice(i, 1)
+        }
+      });
 
       let transaction = this.db.transaction("members", "readwrite");
       let members = transaction.objectStore("members");
       let request = members.delete(memberId);
+    },
+    addOutlay(outlay) {
+      const newOutlayId = (this.outlays[this.outlays.length - 1] || {}).id + 1 || 0;
+      const newOutlay = {...outlay, id: newOutlayId};
+      this.outlays.push(newOutlay);
+
+      let transaction = this.db.transaction("outlays", "readwrite");
+      let outlays = transaction.objectStore("outlays");
+      let request = outlays.add(newOutlay);
+    },
+    editOutlay(outlays) {
+      outlays.forEach(outlay => {
+        this.outlays.forEach((globalOutLay, i) => {
+          if (globalOutLay.id === outlay.id) {
+            this.outlays.splice(i, 1, outlay);
+          }
+        });
+
+        let transaction = this.db.transaction("outlays", "readwrite");
+        let outlaysStore = transaction.objectStore("outlays");
+        let request = outlaysStore.put(outlay);
+      });
+    },
+    deleteOutlays(outlays) {
+      outlays.forEach(outlay => {
+        this.outlays.forEach((globalOutLay, i) => {
+          if (globalOutLay.id === outlay.id) {
+            this.outlays.splice(i, 1);
+          }
+        });
+
+        let transaction = this.db.transaction("outlays", "readwrite");
+        let outlaysStore = transaction.objectStore("outlays");
+        let request = outlaysStore.delete(outlay.id);
+      });
     },
     minusYear() {
       if (this.years > 1) {
@@ -280,38 +327,6 @@ export default {
       this.outlayDialogMode = 'edit';
       this.outlayDialog = !this.outlayDialog;
     },
-    addOutlay(outlay) {
-      const newOutlayId = (this.outlays[this.outlays.length - 1] || {}).id + 1 || 0;
-      const newOutlay = {...outlay, id: newOutlayId};
-      this.outlays.push(newOutlay);
-
-      let transaction = this.db.transaction("outlays", "readwrite");
-      let outlays = transaction.objectStore("outlays");
-      let request = outlays.add(newOutlay);
-    },
-    editOutlay(outlays) {
-      outlays.forEach(outlay => {
-        this.outlays.splice(outlay.id, 1, outlay);
-
-        let transaction = this.db.transaction("outlays", "readwrite");
-        let outlaysStore = transaction.objectStore("outlays");
-        let request = outlaysStore.put(outlay);
-      });
-    },
-    deleteOutlays(outlays) {
-      outlays.forEach(outlay => {
-        this.outlays.splice(outlay.id, 1);
-
-        let transaction = this.db.transaction("outlays", "readwrite");
-        let outlaysStore = transaction.objectStore("outlays");
-        let request = outlaysStore.delete(outlay.id);
-
-        request.onsuccess = (e) => {
-          console.log(request)
-          console.log(e);
-        }
-      });
-    }
   },
   computed: {
     getTotalSallary() {
@@ -340,6 +355,11 @@ export default {
           return obj;
       }, {});
     },
+  },
+  watch: {
+    stepperNum(newStepperNum) {
+      localStorage.setItem('stepperNum', newStepperNum);
+    }
   }
 }
 </script>
