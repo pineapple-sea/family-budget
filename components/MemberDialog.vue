@@ -2,22 +2,22 @@
     <v-dialog v-model="show" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">User Profile</span>
+          <span class="headline">Профіль користувача</span>
         </v-card-title>
         <v-card-text>
           <v-row>
             <v-col cols="12" md="6">
-              <v-text-field v-model="firstName" label="First name" required color="orange"></v-text-field>
+              <v-text-field v-model="firstName" label="Ім'я" required color="orange"></v-text-field>
             </v-col>
             <v-col cols="12" md="6">
-              <v-text-field v-model="lastName" label="Last name" required color="orange">
+              <v-text-field v-model="lastName" label="Прізвище" required color="orange">
               </v-text-field>
             </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="salary"
-                label="Salary"
-                hint="Input your month salary"
+                label="Зарплатня"
+                hint="Введіть вашу місячну зарплатню"
                 required
                 color="orange"
               ></v-text-field>
@@ -26,9 +26,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="member" color="orange darken-1" text @click="deleteMember">Delete</v-btn>
-          <v-btn color="orange darken-1" text @click="closeDialog">Close</v-btn>
-          <v-btn color="orange darken-1" text @click="save">Save</v-btn>
+          <v-btn v-if="member" color="orange darken-1" text @click="deleteMember">Видалити</v-btn>
+          <v-btn color="orange darken-1" text @click="closeDialog">Згорнути</v-btn>
+          <v-btn color="orange darken-1" text @click="save">Зберегти</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

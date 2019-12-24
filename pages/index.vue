@@ -1,17 +1,17 @@
 <template>
   <div class="main">
-    <h1 class="main-title">FAMILY BUDGET CONTROLLER</h1>
+    <h1 class="main-title">Сімейний бюджет</h1>
     <v-stepper v-model="stepperNum">
       <v-stepper-header>
-        <v-stepper-step editable step="1" color="orange">Members</v-stepper-step>
+        <v-stepper-step editable step="1" color="orange">Члени сім'ї</v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step editable step="2" color="orange">Outlays</v-stepper-step>
+        <v-stepper-step editable step="2" color="orange">Витрати</v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step editable step="3" color="orange">Saved</v-stepper-step>
+        <v-stepper-step editable step="3" color="orange">Збереження</v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -23,7 +23,7 @@
               <v-card-title
                   class="card-title"
               >
-                Family members
+                Члени сім'ї
               </v-card-title>
               <v-img
                 class="add-card__img"
@@ -35,7 +35,7 @@
               <v-card-actions>
                 <v-btn @click="openAddMemberPopup" class="mx-auto" color="orange" text
                 >
-                  Add member
+                  Додати члена сім'ї
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -62,7 +62,7 @@
             color="orange"
             @click="stepperNum = 2"
           >
-            Continue
+            Продовжити
           </v-btn>
         </v-stepper-content>
 
@@ -75,7 +75,7 @@
               <v-card-title
                   class="card-title"
               >
-                Family outlays
+                Сімейні витрати
               </v-card-title>
               <v-img
                 class="add-card__img"
@@ -87,7 +87,7 @@
               <v-card-actions>
                 <v-btn @click="openAddOutlayPopup" class="mx-auto" color="orange" text
                 >
-                  Add cost
+                  Додати витрати
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -114,39 +114,53 @@
             color="orange"
             @click="stepperNum = 3"
           >
-            Continue
+            Продовжити
           </v-btn>
 
           <v-btn
             color="orange"
             @click="stepperNum = 1"
           >
-            Back
+            Повернутися
           </v-btn>
         </v-stepper-content>
 
-        <v-stepper-content step="3">
-          <v-card
-            height="200px"
-          >
-            <div class="total">
-              <p>
-                Saved for {{years}} year: {{getTotalSaved}}
-              </p>
-              <v-btn @click="minusYear" class="mx-2" fab dark small color="orange">
-                <v-icon dark>mdi-minus</v-icon>
-              </v-btn>
-              <v-btn @click="plusYear" class="mx-2" fab dark small color="orange">
-                <v-icon dark>mdi-plus</v-icon>
-              </v-btn>
-            </div>
-          </v-card>
 
+        <v-stepper-content step="3">
+          <div class="cards-wrapper">
+
+            <v-card
+              class="card add-card"
+            >
+              <v-card-title
+                  class="card-title"
+              >
+                Сімейні збереження
+              </v-card-title>
+              <v-img
+                class="add-card__img"
+                width="200px"
+                src="https://pngimg.com/uploads/piggy_bank/piggy_bank_PNG104.png"
+              >
+              </v-img>
+                <p class="card__text">
+                  Збереження на такий період років: {{years}} становить : {{getTotalSaved}}
+                </p>
+              <div class="card__saved">
+                <v-btn @click="minusYear" class="mx-3" fab dark small color="orange">
+                  <v-icon dark>mdi-minus</v-icon>
+                </v-btn>
+                <v-btn @click="plusYear" class="mx-3" fab dark small color="orange">
+                  <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
+              </div>
+            </v-card>
+          </div>
           <v-btn
             color="orange"
             @click="stepperNum = 2"
           >
-            Back
+            Повернутися
           </v-btn>
         </v-stepper-content>
       </v-stepper-items>
@@ -364,14 +378,29 @@ export default {
 }
 </script>
 <style lang="scss">
-  .total {
-    color: #cc99ff;
+  .card__saved {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  .card__text {
+    color: #ffa500;
+    font-size: 15pt;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px 0 10px 0;
   }
   .main-title {
     font-family: monospace;
-    color: #cc99ff;
+    color: #ffa500;
     text-align: center;
     margin: 40px 0;
+  }
+  .card-title {
+    color: #ffa500;
   }
 
   .cards-wrapper {

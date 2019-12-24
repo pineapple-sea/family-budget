@@ -2,21 +2,21 @@
     <v-dialog v-model="show" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">Cost List</span>
+          <span class="headline">Список витрат</span>
         </v-card-title>
         <v-card-text>
           <v-row v-if="mode === 'add'">
             <v-col cols="12">
-              <v-text-field v-model="costType" label="Cost type" required color="orange"></v-text-field>
+              <v-text-field v-model="costType" label="Група витрат" required color="orange"></v-text-field>
             </v-col>
             <v-col cols="12">
-              <v-text-field v-model="costName" label="Cost name" required color="orange"></v-text-field>
+              <v-text-field v-model="costName" label="Назва витрати" required color="orange"></v-text-field>
             </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="cost"
-                label="Cost"
-                hint="Input your month costs"
+                label="сума"
+                hint="Введіть місячну суму"
                 required
                 color="orange"
               ></v-text-field>
@@ -26,14 +26,14 @@
             <v-card v-for="cost of outlays" :key="cost.id">
               <v-row>
                 <v-col cols="6">
-                  <v-text-field v-model="cost.costName" label="Cost name" required color="orange"></v-text-field>
+                  <v-text-field v-model="cost.costName" label="Назва витрати" required color="orange"></v-text-field>
                 </v-col>
 
                 <v-col cols="6">
                   <v-text-field
                     v-model="cost.cost"
-                    label="Cost"
-                    hint="Input your month outlays"
+                    label="сума"
+                    hint="Введіть місячну суму"
                     required
                     color="orange"
                   ></v-text-field>
@@ -44,9 +44,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="outlays" color="orange darken-1" text @click="deleteOutlays">Delete</v-btn>
-          <v-btn color="orange darken-1" text @click="closeDialog">Close</v-btn>
-          <v-btn color="orange darken-1" text @click="save">Save</v-btn>
+          <v-btn v-if="outlays" color="orange darken-1" text @click="deleteOutlays">Видалити</v-btn>
+          <v-btn color="orange darken-1" text @click="closeDialog">Згорнути</v-btn>
+          <v-btn color="orange darken-1" text @click="save">Зберегти</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
